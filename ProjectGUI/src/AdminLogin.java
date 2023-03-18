@@ -4,8 +4,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.awt.event.ActionEvent;
 
 public class AdminLogin extends JFrame {
 
@@ -63,7 +71,43 @@ public class AdminLogin extends JFrame {
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Login");
+		final JButton btnNewButton = new JButton("Login");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				try
+				{
+					String a1=textField.getText();
+					String p1=textField_1.getText();
+					String str1="select * from admin";
+					Class.forName("org.h2.Driver");
+					Connection conn=DriverManager.getConnection("jdbc:h2:tcp://localhost/~/javap20","sa","");
+					Statement stmt=conn.createStatement();
+					ResultSet rs=stmt.executeQuery(str1);
+					rs.next();
+					String uname=rs.getString(1);
+					String pass=rs.getString(2);
+					if(a1.equals(uname)&&p1.equals(pass))
+					{
+						
+						JOptionPane.showMessageDialog(btnNewButton,"LoginSucess!!!");
+						new AdminHomePage().setVisible(true);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(btnNewButton,"LoginFail!!");
+					}
+					
+				}
+				catch(SQLException t)
+				{
+					
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnNewButton.setBounds(55, 208, 124, 23);
 		contentPane.add(btnNewButton);
 		
